@@ -3,6 +3,11 @@
 class MercuryParserExtension extends Minz_Extension {
 
     const DEFAULT_MERCURY_API_URL = "http://mercury:3000/";
+    const MATCH_URL = 'gamer.com.tw';
+    
+    public function isMatchUrl($entry) {
+        return (bool) strpos($entry->link(), static::MATCH_URL);
+    }
 
     public function init() {
         // Get configuration
@@ -16,6 +21,9 @@ class MercuryParserExtension extends Minz_Extension {
     }
 
     public function replaceEntry($entry) {
+        if (false === $this->isMatchUrl($entry)) {
+            return $entry;
+        }
         try {
             // Build request URL
             $parsedUrl = parse_url(FreshRSS_Context::$user_conf->mercury_api_url);
